@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-ping-pong-app-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-ping-pong-app
+  template:
+    metadata:
+      labels:
+        app: dwk-ping-pong-app
+    spec:
+      containers:
+      - name: dwk-ping-pong-app
+        image: smuliii/dwk-ping-pong-app:latest
