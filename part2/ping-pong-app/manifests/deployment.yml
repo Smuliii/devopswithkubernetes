@@ -12,13 +12,13 @@ spec:
       labels:
         app: dwk-ping-pong-app
     spec:
-      volumes:
-        - name: dwk-volume
-          persistentVolumeClaim:
-            claimName: dwk-volume-claim
+      # volumes:
+      #   - name: dwk-volume
+      #     persistentVolumeClaim:
+      #       claimName: dwk-volume-claim
       containers:
         - name: dwk-ping-pong-app
-          image: smuliii/dwk-ping-pong-app@sha256:f33ce4e72351037e4668680cdc99320b86bd5dfa7a6afd83878f60a50bb51ce2
-          volumeMounts:
-            - name: dwk-volume
-              mountPath: /app/files
+          image: smuliii/dwk-ping-pong-app@sha256:3a2c7eb5a9c8b41a4c055e86a02ac35fdcdb5bb0d1b5fee3b70c2e5846ab239a
+          # volumeMounts:
+          #   - name: dwk-volume
+          #     mountPath: /app/files

@@ -18,12 +18,15 @@ spec:
             claimName: dwk-volume-claim
       containers:
         - name: dwk-main-app-generator
-          image: smuliii/dwk-main-app-generator@sha256:81bc1fabcbfd01bffad24d63e0aaa28a2646b9f2e894182ceba749a64cbc8413
+          image: smuliii/dwk-main-app-generator@sha256:b1f97188bf5261985d003d3276935c11194f3396554a9e959e1f66d610789004
           volumeMounts:
             - name: dwk-volume
               mountPath: /app/files
         - name: dwk-main-app-reader
-          image: smuliii/dwk-main-app-reader@sha256:c1c1b287f166207afc83c52b611e98b03ef5062de16229fc90ebad871c4f43f4
+          image: smuliii/dwk-main-app-reader@sha256:531c6880becce000b61efa6dbc7ba86ea7a51c936671bd7a6eb23e2b37fcc6c1
+          env:
+            - name: PINGPONG_URL
+              value: http://dwk-ping-pong-app-svc:2345
           volumeMounts:
             - name: dwk-volume
               mountPath: /app/files

@@ -23,9 +23,16 @@ spec:
             port:
              number: 2345
       - path: /project
-        pathType: Prefix
+        pathType: Exact
         backend:
           service:
             name: dwk-project-app-svc
             port:
              number: 2345
+      - path: /project/todos
+        pathType: Prefix
+        backend:
+          service:
+            name: dwk-project-app-svc
+            port:
+             number: 2346

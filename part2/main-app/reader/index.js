@@ -1,17 +1,27 @@
-import fs from 'fs/promises';
+import 'dotenv/config';
+import path from 'path';
+import fs from 'fs';
 import express from 'express';
+import got from 'got';
 
-const hashFile = '/app/files/hash.txt';
-const pingpongFile = '/app/files/pingpongs.txt';
+const dir = process.env.FILE_PATH;
+const hashFile = path.join(dir, 'hash.txt');
 const app = express();
-const port = 3000;
+const port = 3001;
+
+try {
+	fs.accessSync(dir, fs.constants.R_OK);
+} catch (e) {
+	fs.mkdirSync(dir);
+}
 
 const readHash = async () => {
 	try {
-		const hash = await fs.readFile(hashFile, 'utf-8');
-		const pingpongs = await fs.readFile(pingpongFile, 'utf-8');
+		const hash = await fs.promises.readFile(hashFile, 'utf-8');
+		const pingpongs = await got(process.env.PINGPONG_URL).text();
 		return hash + '<br>' + 'Ping / Pongs: ' + pingpongs;
 	} catch (e) {
+		console.log(e);
 		return 'file(s) not found';
 	}
 };
