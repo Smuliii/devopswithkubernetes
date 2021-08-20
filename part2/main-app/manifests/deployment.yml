@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-main-app-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-main-app
+  template:
+    metadata:
+      labels:
+        app: dwk-main-app
+    spec:
+      volumes:
+        - name: dwk-volume
+          persistentVolumeClaim:
+            claimName: dwk-volume-claim
+      containers:
+        - name: dwk-main-app-generator
+          image: smuliii/dwk-main-app-generator@sha256:81bc1fabcbfd01bffad24d63e0aaa28a2646b9f2e894182ceba749a64cbc8413
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files
+        - name: dwk-main-app-reader
+          image: smuliii/dwk-main-app-reader@sha256:c1c1b287f166207afc83c52b611e98b03ef5062de16229fc90ebad871c4f43f4
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files
