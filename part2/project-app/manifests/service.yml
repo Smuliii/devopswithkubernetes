@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: todos-project
   name: dwk-project-app-svc
 spec:
   type: ClusterIP

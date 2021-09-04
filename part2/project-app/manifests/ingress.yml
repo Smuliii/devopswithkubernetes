@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: todos-project
+  name: dwk-project-app-ing
+  annotations:
+    traefik.ingress.kubernetes.io/rule-type: "PathPrefixStrip"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /project
+        pathType: Exact
+        backend:
+          service:
+            name: dwk-project-app-svc
+            port:
+             number: 2345
+      - path: /project/todos
+        pathType: Prefix
+        backend:
+          service:
+            name: dwk-project-app-svc
+            port:
+             number: 2346

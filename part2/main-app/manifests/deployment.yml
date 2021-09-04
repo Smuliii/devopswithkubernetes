@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: dwk-main
   name: dwk-main-app-dep
 spec:
   replicas: 1
@@ -23,10 +24,13 @@ spec:
             - name: dwk-volume
               mountPath: /app/files
         - name: dwk-main-app-reader
-          image: smuliii/dwk-main-app-reader@sha256:531c6880becce000b61efa6dbc7ba86ea7a51c936671bd7a6eb23e2b37fcc6c1
+          image: smuliii/dwk-main-app-reader@sha256:6ef9347c94ce44d62905b42250b32624304e4aa727202543f63d46a6b153b7dc
           env:
             - name: PINGPONG_URL
               value: http://dwk-ping-pong-app-svc:2345
+          envFrom:
+            - configMapRef:
+                name: dwk-main-app-conf
           volumeMounts:
             - name: dwk-volume
               mountPath: /app/files

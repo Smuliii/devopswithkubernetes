@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: todos-project
   name: dwk-project-app-dep
 spec:
   replicas: 1
@@ -19,7 +20,7 @@ spec:
       containers:
         - name: dwk-project-app-frontend
           image: smuliii/dwk-project-app-frontend@sha256:021bacf2192fa8eea56dc396454785918ca96be44f9a876c662c18458c7f2e27
-          env:
+          ennv:
             - name: FORM_URL
               value: todos
           volumeMounts:

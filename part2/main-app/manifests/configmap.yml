@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: dwk-main
+  name: dwk-main-app-conf
+data:
+  MESSAGE: Hello

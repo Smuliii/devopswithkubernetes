@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  namespace: dwk-main
-  name: dwk-persistent-volume
+  namespace: todos-project
+  name: dwk-persistent-volume-todos
 spec:
   storageClassName: manual
   capacity:
