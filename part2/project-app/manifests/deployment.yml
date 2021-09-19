@@ -20,11 +20,11 @@ spec:
       containers:
         - name: dwk-project-app-frontend
           image: smuliii/dwk-project-app-frontend@sha256:021bacf2192fa8eea56dc396454785918ca96be44f9a876c662c18458c7f2e27
-          ennv:
+          env:
             - name: FORM_URL
               value: todos
           volumeMounts:
             - name: dwk-volume
               mountPath: /app/files
         - name: dwk-project-app-backend
-          image: smuliii/dwk-project-app-backend@sha256:f0a7d13bb37375fca7d43ff8616c55b3c08a0ff0c3518aacda704e6889e2dd1f
+          image: smuliii/dwk-project-app-backend@sha256:08e616cbde35eb12567bcb225de43d06cbf2bf26d2afa3e5d81011b143650b2d

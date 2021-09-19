@@ -1,0 +1,20 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  namespace: todos-project
+  name: todo-cron
+spec:
+  schedule: '0 12 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cron
+              image: curlimages/curl:7.78.0
+              command:
+                - '/bin/sh'
+              args:
+                - '-c'
+                - 'curl -s -o /dev/null -w "text=Read %{redirect_url}" https://en.wikipedia.org/wiki/Special:Random | curl -d @- -X POST http://dwk-project-app-svc:2346'
+          restartPolicy: Never

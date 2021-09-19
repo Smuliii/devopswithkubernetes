@@ -19,7 +19,7 @@ spec:
       #       claimName: dwk-volume-claim
       containers:
         - name: dwk-ping-pong-app
-          image: smuliii/dwk-ping-pong-app@sha256:3a2c7eb5a9c8b41a4c055e86a02ac35fdcdb5bb0d1b5fee3b70c2e5846ab239a
+          image: smuliii/dwk-ping-pong-app@sha256:4a30dd309174a026ef0cc1fff09d88ffe1b46d85e36f689b8ad90849393be46d
           # volumeMounts:
           #   - name: dwk-volume
           #     mountPath: /app/files
