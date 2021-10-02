@@ -19,7 +19,15 @@ spec:
       #       claimName: dwk-volume-claim
       containers:
         - name: dwk-ping-pong-app
-          image: smuliii/dwk-ping-pong-app@sha256:09122f166b9d17a5de5add1eedcf03e1cd96880b5fcaa1ada3710d097af64d7d
+          image: smuliii/dwk-ping-pong-app@sha256:0db3b5af6d261003e630bb9878e75ba197494b2e4a277c62154f4eefe1e2e67f
           # volumeMounts:
           #   - name: dwk-volume
           #     mountPath: /app/files
+          readinessProbe:
+            httpGet:
+              path: /pingpong
+              port: 3002
+          livenessProbe:
+            httpGet:
+              path: /pingpong
+              port: 3002

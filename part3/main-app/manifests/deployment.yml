@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # namespace: dwk-main
+  name: dwk-main-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-main-app
+  template:
+    metadata:
+      labels:
+        app: dwk-main-app
+    spec:
+      volumes:
+        - name: dwk-volume
+          persistentVolumeClaim:
+            claimName: dwk-volume-claim
+      containers:
+        - name: dwk-main-app-generator
+          image: smuliii/dwk-main-app-generator@sha256:b1f97188bf5261985d003d3276935c11194f3396554a9e959e1f66d610789004
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files
+        - name: dwk-main-app-reader
+          image: smuliii/dwk-main-app-reader@sha256:802baa40d416d95f0670f4136d3024ca57d42025953cc965308b6c59a7288dd7
+          env:
+            - name: PINGPONG_URL
+              value: http://dwk-ping-pong-app/pingpong
+          envFrom:
+            - configMapRef:
+                name: dwk-main-app
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files

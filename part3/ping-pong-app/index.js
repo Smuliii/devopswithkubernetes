@@ -35,7 +35,7 @@ sql.query(
 	}
 );
 
-app.get('/', async (req, res) => {
+app.get('/pingpong', async (req, res) => {
 	// pingpongs++;
 	// await fs.promises.writeFile(file, String(pingpongs), { encoding: 'utf-8' });
 
