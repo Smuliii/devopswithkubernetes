@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # namespace: dwk-main
+  name: dwk-ping-pong-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-ping-pong-app
+  template:
+    metadata:
+      labels:
+        app: dwk-ping-pong-app
+    spec:
+      # volumes:
+      #   - name: dwk-volume
+      #     persistentVolumeClaim:
+      #       claimName: dwk-volume-claim
+      containers:
+        - name: dwk-ping-pong-app
+          image: smuliii/dwk-ping-pong-app@sha256:09122f166b9d17a5de5add1eedcf03e1cd96880b5fcaa1ada3710d097af64d7d
+          # volumeMounts:
+          #   - name: dwk-volume
+          #     mountPath: /app/files

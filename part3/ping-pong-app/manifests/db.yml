@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  # namespace: dwk-main
+  name: dwk-db
+spec:
+  selector:
+    matchLabels:
+      app: dwk-db
+  serviceName: dwk-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dwk-db
+    spec:
+      containers:
+        - name: dwk-db
+          image: postgres:13.4
+          envFrom:
+            - secretRef:
+                name: dwk-db-secret
+          ports:
+            - containerPort: 5432
+              name: db
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+  volumeClaimTemplates:
+    - metadata:
+        # namespace: dwk-main
+        name: dwk-db-data-claim
+      spec:
+        # storageClassName: manual
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   # namespace: dwk-main
+#   name: dwk-db-data
+# spec:
+#   capacity:
+#     storage: 500Mi
+#   volumeMode: Filesystem
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: manual
+#   local:
+#     path: /tmp/kube-data
+#   nodeAffinity:
+#     required:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: kubernetes.io/hostname
+#           operator: In
+#           values:
+#           - k3d-k3s-default-agent-0
+# ---
+apiVersion: v1
+kind: Service
+metadata:
+  # namespace: dwk-main
+  name: dwk-db
+spec:
+  selector:
+    app: dwk-db
+  clusterIP: None
+  ports:
+    - port: 5432
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  # namespace: dwk-main
+  name: dwk-db-secret
+type: Opaque
+data:
+  # POSTGRES_DB: dwk
+  POSTGRES_DB: ZHdr
+  # POSTGRES_USER: postgres
+  POSTGRES_USER: cG9zdGdyZXM=
+  # POSTGRES_PASSWORD: postgres
+  POSTGRES_PASSWORD: cG9zdGdyZXM=
