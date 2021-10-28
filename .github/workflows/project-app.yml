@@ -26,8 +26,8 @@ jobs:
       - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone=$GKE_ZONE
       - run: gcloud --quiet auth configure-docker
 
-      - run: echo "BACKEND_APP_IMAGE_WITH_TAG::gcr.io/${{ secrets.GCP_PROJECT_ID }}/$BACKEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
-      - run: echo "FRONTEND_APP_IMAGE_WITH_TAG::gcr.io/${{ secrets.GCP_PROJECT_ID }}/$FRONTEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+      - run: echo "BACKEND_APP_IMAGE_WITH_TAG::gcr.io/${{ secrets.GCP_PROJECT_ID }}/$BACKEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" >> $GITHUB_ENV
+      - run: echo "FRONTEND_APP_IMAGE_WITH_TAG::gcr.io/${{ secrets.GCP_PROJECT_ID }}/$FRONTEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" >> $GITHUB_ENV
 
       - run: cd part3/project-app/backend
       - name: Build backend app
