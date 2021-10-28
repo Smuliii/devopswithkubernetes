@@ -1,0 +1,33 @@
+name: GKE Pipeline deletion
+
+on:
+  delete:
+    branches:
+
+env:
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-a
+
+jobs:
+  gke_deployment:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: part3/project-app
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone=$GKE_ZONE
+
+      - if: "!startsWith(github.ref, 'refs/heads/main')"
+        run: echo "GKE_NAMESPACE=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Delete namespace
+        if: "!startsWith(github.ref, 'refs/heads/main')"
+        run: |-
+          kubectl delete namespace $GKE_NAMESPACE
