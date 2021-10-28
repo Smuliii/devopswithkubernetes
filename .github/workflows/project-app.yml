@@ -15,6 +15,9 @@ env:
 jobs:
   gke_deployment:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: part3/project-app
     steps:
       - uses: actions/checkout@v2
       - name: setup gcloud
@@ -29,19 +32,18 @@ jobs:
       - run: echo "BACKEND_APP_IMAGE_WITH_TAG=gcr.io/${{ secrets.GCP_PROJECT_ID }}/$BACKEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" >> $GITHUB_ENV
       - run: echo "FRONTEND_APP_IMAGE_WITH_TAG=gcr.io/${{ secrets.GCP_PROJECT_ID }}/$FRONTEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" >> $GITHUB_ENV
 
-      - run: cd part3/project-app/backend
       - name: Build backend app
+        working-directory: part3/project-app/backend
         run: docker build . -t $BACKEND_APP_IMAGE_WITH_TAG
       - name: Publish backend app
         run: docker push $BACKEND_APP_IMAGE_WITH_TAG
 
-      - run: cd ../frontend
       - name: Build backend app
+        working-directory: part3/project-app/frontend
         run: docker build . -t $FRONTEND_APP_IMAGE_WITH_TAG
       - name: Publish backend app
         run: docker push $FRONTEND_APP_IMAGE_WITH_TAG
 
-      - run: cd ../
       - name: Set up Kustomize
         run: |-
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.4.0/kustomize_v4.4.0_linux_amd64.tar.gz
