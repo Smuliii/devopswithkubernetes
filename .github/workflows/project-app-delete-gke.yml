@@ -9,7 +9,7 @@ env:
   GKE_ZONE: europe-north1-a
 
 jobs:
-  gke_deployment:
+  gke_deletion:
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -24,10 +24,10 @@ jobs:
           export_default_credentials: true
       - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone=$GKE_ZONE
 
-      - if: "!startsWith(github.ref, 'refs/heads/main')"
-        run: echo "GKE_NAMESPACE=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+      - if: ${{ github.event.ref != 'main' }}
+        run: echo "GKE_NAMESPACE=${{ github.event.ref }}" >> $GITHUB_ENV
 
       - name: Delete namespace
-        if: "!startsWith(github.ref, 'refs/heads/main')"
+        if: ${{ github.event.ref != 'main' }}
         run: |-
           kubectl delete namespace $GKE_NAMESPACE
