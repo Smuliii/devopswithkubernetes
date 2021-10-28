@@ -31,13 +31,13 @@ jobs:
 
       - run: cd part3/project-app/backend
       - name: Build backend app
-        run: docker build --tag $BACKEND_APP_IMAGE_WITH_TAG .
+        run: docker build . -t $BACKEND_APP_IMAGE_WITH_TAG
       - name: Publish backend app
         run: docker push $BACKEND_APP_IMAGE_WITH_TAG
 
       - run: cd ../frontend
       - name: Build backend app
-        run: docker build --tag $FRONTEND_APP_IMAGE_WITH_TAG .
+        run: docker build . -t $FRONTEND_APP_IMAGE_WITH_TAG
       - name: Publish backend app
         run: docker push $FRONTEND_APP_IMAGE_WITH_TAG
 
