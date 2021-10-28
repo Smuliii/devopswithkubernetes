@@ -1,0 +1,55 @@
+name: GKE Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-a
+  DEPLOYMENT_NAME: dwk-project-app
+  BACKEND_APP_IMAGE: dwk-project-app-backend
+  FRONTEND_APP_IMAGE: dwk-project-app-frontend
+
+jobs:
+  gke_deployment:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup gcloud
+        uses: google-github-actions/setup-gcloud@main
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone=$GKE_ZONE
+      - run: gcloud --quiet auth configure-docker
+
+      - run: echo "BACKEND_APP_IMAGE_WITH_TAG::gcr.io/${{ secrets.GCP_PROJECT_ID }}/$BACKEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+      - run: echo "FRONTEND_APP_IMAGE_WITH_TAG::gcr.io/${{ secrets.GCP_PROJECT_ID }}/$FRONTEND_APP_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+
+      - run: cd part3/project-app/backend
+      - name: Build backend app
+        run: docker build --tag $BACKEND_APP_IMAGE_WITH_TAG .
+      - name: Publish backend app
+        run: docker push $BACKEND_APP_IMAGE_WITH_TAG
+
+      - run: cd ../frontend
+      - name: Build backend app
+        run: docker build --tag $FRONTEND_APP_IMAGE_WITH_TAG .
+      - name: Publish backend app
+        run: docker push $FRONTEND_APP_IMAGE_WITH_TAG
+
+      - run: cd ../
+      - name: Set up Kustomize
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.4.0/kustomize_v4.4.0_linux_amd64.tar.gz
+          chmod u+x ./kustomize
+
+      - name: Deploy
+        run: |-
+          ./kustomize edit set image BACKEND_APP_IMAGE=$BACKEND_APP_IMAGE_WITH_TAG
+          ./kustomize edit set image FRONTEND_APP_IMAGE=$FRONTEND_APP_IMAGE_WITH_TAG
+          kubectl apply -k .
+          kubectl rollout status deployment $DEPLOYMENT_NAME

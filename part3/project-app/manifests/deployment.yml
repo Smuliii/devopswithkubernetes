@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-project-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-project-app
+  template:
+    metadata:
+      labels:
+        app: dwk-project-app
+    spec:
+      volumes:
+        - name: dwk-volume
+          persistentVolumeClaim:
+            claimName: dwk-volume-claim
+      containers:
+        - name: dwk-project-app-frontend
+          image: FRONTEND_APP_IMAGE
+          envFrom:
+            - configMapRef:
+                name: dwk-project-app-config
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files
+        - name: dwk-project-app-backend
+          image: BACKEND_APP_IMAGE
+          envFrom:
+            - secretRef:
+                name: dwk-project-app-secrets

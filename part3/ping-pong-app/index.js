@@ -44,4 +44,6 @@ app.get('/pingpong', async (req, res) => {
 
 	res.send(`pong ${rows[0].pongs}`);
 });
+
+app.get('/', (req, res) => res.send('ok'));
 app.listen(port, () => console.log(`Server started in port ${port}`));

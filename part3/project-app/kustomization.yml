@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - manifests/cron.yml
+  - manifests/db.yml
+  - manifests/deployment.yml
+  - manifests/ingress.yml
+  - manifests/persistentvolumeclaim.yml
+  - manifests/service.yml
+images:
+  - name: FRONTEND_APP_IMAGE
+    newName: smuliii/dwk-project-app-frontend
+    # digest: sha256:021bacf2192fa8eea56dc396454785918ca96be44f9a876c662c18458c7f2e27
+  - name: BACKEND_APP_IMAGE
+    newName: smuliii/dwk-project-app-backend
+    # digest: sha256:47952f25b9329a5a7286ac2b348d69898e71e60a48b66b69e1a8b17fd72d1c5d
+configMapGenerator:
+  - name: dwk-project-app-config
+    envs:
+      - config/configmap.env
+secretGenerator:
+  - name: dwk-project-app-secrets
+    envs:
+      - config/secrets.env
