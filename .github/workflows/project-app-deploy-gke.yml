@@ -2,6 +2,7 @@ name: GKE Pipeline
 
 on:
   push:
+    branches:
 
 env:
   GKE_CLUSTER: dwk-cluster
@@ -45,11 +46,16 @@ jobs:
       - name: Set up Kustomize
         run: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
 
+      - if: startsWith(github.ref, 'refs/heads/main')
+        run: echo "GKE_NAMESPACE=default" >> $GITHUB_ENV
+      - if: "!startsWith(github.ref, 'refs/heads/main')"
+        run: echo "GKE_NAMESPACE=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
       - name: Deploy
         run: |-
-          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
-          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
-          ./kustomize edit set namespace ${GITHUB_REF#refs/heads/}
+          kubectl create namespace $GKE_NAMESPACE || true
+          kubectl config set-context --current --namespace=$GKE_NAMESPACE
+          ./kustomize edit set namespace $GKE_NAMESPACE
           ./kustomize edit set image BACKEND_APP_IMAGE=$BACKEND_APP_IMAGE_WITH_TAG
           ./kustomize edit set image FRONTEND_APP_IMAGE=$FRONTEND_APP_IMAGE_WITH_TAG
           kubectl apply -k .
