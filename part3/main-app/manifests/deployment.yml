@@ -23,6 +23,10 @@ spec:
           volumeMounts:
             - name: dwk-volume
               mountPath: /app/files
+          resources:
+            limits:
+              cpu: 100m
+              memory: 500Mi
         - name: dwk-main-app-reader
           image: smuliii/dwk-main-app-reader@sha256:802baa40d416d95f0670f4136d3024ca57d42025953cc965308b6c59a7288dd7
           env:
@@ -34,3 +38,7 @@ spec:
           volumeMounts:
             - name: dwk-volume
               mountPath: /app/files
+          resources:
+            limits:
+              cpu: 100m
+              memory: 500Mi

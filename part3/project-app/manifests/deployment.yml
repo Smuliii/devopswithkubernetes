@@ -25,11 +25,23 @@ spec:
           volumeMounts:
             - name: dwk-volume
               mountPath: /app/files
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 250m
+              memory: 250Mi
         - name: dwk-project-app-backend
           image: BACKEND_APP_IMAGE
           envFrom:
             - secretRef:
                 name: dwk-project-app-secrets
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 500m
+              memory: 500Mi
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.27.0
           command:
@@ -37,3 +49,9 @@ spec:
             - "-instances=devopswithkubernetes:europe-north1:dwk-db=tcp:5432"
           securityContext:
             runAsNonRoot: true
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 500m
+              memory: 1000Gi
