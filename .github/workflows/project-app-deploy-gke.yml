@@ -3,6 +3,7 @@ name: GKE Pipeline
 on:
   push:
     branches:
+  workflow_dispatch:
 
 env:
   GKE_CLUSTER: dwk-cluster
