@@ -35,3 +35,7 @@
 I picked Google Cloud SQL for the project since I haven't used it before.
 
 ---
+
+# Exercise Exercise 3.10: Project v1.6
+
+![gke-logs](gke-logs.png)
