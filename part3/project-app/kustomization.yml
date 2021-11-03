@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - manifests/cron.yml
-  - manifests/db.yml
+  # - manifests/db.yml
   - manifests/deployment.yml
   - manifests/ingress.yml
   - manifests/persistentvolumeclaim.yml
@@ -21,4 +21,5 @@ configMapGenerator:
 secretGenerator:
   - name: dwk-project-app-secrets
     envs:
-      - config/secrets.env
+      # - config/secrets.env
+      - config/cloud-sql-secrets.env

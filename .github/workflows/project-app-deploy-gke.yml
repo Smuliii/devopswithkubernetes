@@ -59,5 +59,6 @@ jobs:
           ./kustomize edit set namespace $GKE_NAMESPACE
           ./kustomize edit set image BACKEND_APP_IMAGE=$BACKEND_APP_IMAGE_WITH_TAG
           ./kustomize edit set image FRONTEND_APP_IMAGE=$FRONTEND_APP_IMAGE_WITH_TAG
+          echo "PGPASSWORD=${{ secrets.GCP_DB_PASSWORD }}" >> config/cloud-sql-secrets.env
           kubectl apply -k .
           kubectl rollout status deployment $DEPLOYMENT_NAME
