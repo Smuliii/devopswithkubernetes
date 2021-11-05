@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dwk-ping-pong-app
+resources:
+  - manifests/namespace.yml
+  - manifests/db.yml
+  - manifests/deployment.yml
+  - manifests/ingress.yml
+  - manifests/service.yml
+configMapGenerator:
+  - name: dwk-ping-pong-app-config
+    literals:
+    - FILE_PATH=/app/files
+    - PGDATABASE=dwk
+    - PGHOST=dwk-db
+    - PGUSER=postgres
+    - PGPASSWORD=postgres
+    - PGPORT=5432
+secretGenerator:
+  - name: dwk-db-secret
+    literals:
+      - POSTGRES_DB=dwk
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+images:
+  - name: dwk-ping-pong-app-image
+    newName: smuliii/dwk-ping-pong-app
+    digest: sha256:8a0a8f7acb5f95130acb352e7dc62de5eccc6810cd2983c5fd72ca2fff0d86d7

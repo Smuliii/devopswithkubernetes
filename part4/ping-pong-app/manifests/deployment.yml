@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-ping-pong-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-ping-pong-app
+  template:
+    metadata:
+      labels:
+        app: dwk-ping-pong-app
+    spec:
+      containers:
+        - name: dwk-ping-pong-app
+          image: dwk-ping-pong-app-image
+          envFrom:
+            - configMapRef:
+                name: dwk-ping-pong-app-config
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3002

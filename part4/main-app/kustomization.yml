@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dwk-main-app
+resources:
+  - manifests/namespace.yml
+  - manifests/deployment.yml
+  - manifests/ingress.yml
+  - manifests/persistentvolume.yml
+  - manifests/persistentvolumeclaim.yml
+  - manifests/service.yml
+configMapGenerator:
+  - name: dwk-main-app-generator-config
+    literals:
+      - FILE_PATH=/app/files
+  - name: dwk-main-app-reader-config
+    literals:
+      - FILE_PATH=/app/files
+      - PINGPONG_URL=http://dwk-ping-pong-app.dwk-ping-pong-app/pingpong
+      - MESSAGE=Hello
+images:
+  - name: dwk-main-app-generator-image
+    newName: smuliii/dwk-main-app-generator
+    digest: sha256:b1f97188bf5261985d003d3276935c11194f3396554a9e959e1f66d610789004
+  - name: dwk-main-app-reader-image
+    newName: smuliii/dwk-main-app-reader
+    digest: sha256:f3313a04c42e91365504c42c765299bb44462e8877bd871f7a9f10c64b73ec48

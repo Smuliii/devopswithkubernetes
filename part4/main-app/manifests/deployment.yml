@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-main-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-main-app
+  template:
+    metadata:
+      labels:
+        app: dwk-main-app
+    spec:
+      volumes:
+        - name: dwk-volume
+          persistentVolumeClaim:
+            claimName: dwk-volume-claim
+      # initContainers:
+      #   - name: dwk-main-app-health-check
+      #     image: stefanevinance/wait-for-200@sha256:6a0538285c46efd92e34d35efcc1a9e51565f7ec87b5e889ea0f84f43be544ec
+      #     env:
+      #       - name: URL
+      #         value: http://dwk-ping-pong-app.dwk-ping-pong-app/healthz
+      containers:
+        - name: dwk-main-app-generator
+          image: dwk-main-app-generator-image
+          envFrom:
+            - configMapRef:
+                name: dwk-main-app-generator-config
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files
+        - name: dwk-main-app-reader
+          image: dwk-main-app-reader-image
+          envFrom:
+            - configMapRef:
+                name: dwk-main-app-reader-config
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files
+          readinessProbe:
+            exec:
+              command:
+                - curl
+                - --fail
+                - http://dwk-ping-pong-app.dwk-ping-pong-app/healthz
