@@ -1,11 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: dwk-project-app
+configurations:
+  - manifests/rollout-transform.yaml
 resources:
   - manifests/namespace.yml
   - manifests/cron.yml
   - manifests/db.yml
-  - manifests/deployment.yml
+  - manifests/analysistemplate.yml
+  - manifests/rollout.yml
+  # - manifests/deployment.yml
   - manifests/ingress.yml
   - manifests/persistentvolume.yml
   - manifests/persistentvolumeclaim.yml
@@ -17,7 +21,7 @@ images:
     digest: sha256:83e9842a9f5c705c7156b776368fc2bf011cef7bc39ad3d0ea35f5a7229b7413
   - name: dwk-project-app-backend-image
     newName: smuliii/dwk-project-app-backend
-    digest: sha256:6ed298b5c83be4b16f2d006f9e62d69d8fbf11e51bfa95e30ffd2fa6a3bb58a0
+    digest: sha256:a2078be60a89594ddd7f0d8d6ccb7df3d1ad7d3ba40f4703b9fa1b823b7a9a68
 configMapGenerator:
   - name: dwk-project-app-config
     envs:

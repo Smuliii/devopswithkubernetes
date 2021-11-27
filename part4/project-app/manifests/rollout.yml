@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: dwk-project-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dwk-project-app
+  strategy:
+    canary:
+      analysis:
+        templates:
+          - templateName: success-rate
+      steps:
+      - setWeight: 25
+      - pause:
+          duration: 30s
+      - setWeight: 50
+      - pause:
+          duration: 30s
+  template:
+    metadata:
+      labels:
+        app: dwk-project-app
+    spec:
+      volumes:
+        - name: dwk-volume
+          persistentVolumeClaim:
+            claimName: dwk-volume-claim
+      containers:
+        - name: dwk-project-app-frontend
+          image: dwk-project-app-frontend-image
+          envFrom:
+            - configMapRef:
+                name: dwk-project-app-config
+          volumeMounts:
+            - name: dwk-volume
+              mountPath: /app/files
+          # resources:
+          #   requests:
+          #     cpu: 100m
+          #   limits:
+          #     cpu: 250m
+          #     memory: 250Mi
+        - name: dwk-project-app-backend
+          image: dwk-project-app-backend-image
+          envFrom:
+            - secretRef:
+                name: dwk-project-app-secrets
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+               path: /healthz
+               port: 3004
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            httpGet:
+               path: /healthz
+               port: 3004
+          # resources:
+          #   requests:
+          #     cpu: 100m
+          #   limits:
+          #     cpu: 500m
+          #     memory: 500Mi
