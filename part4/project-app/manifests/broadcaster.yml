@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dwk-project-app-broadcaster
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: dwk-project-app-broadcaster
+  template:
+    metadata:
+      labels:
+        app: dwk-project-app-broadcaster
+    spec:
+      containers:
+        - name: dwk-project-app-broadcaster
+          image: dwk-project-app-broadcaster-image
+          envFrom:
+            - secretRef:
+                name: dwk-project-app-secrets

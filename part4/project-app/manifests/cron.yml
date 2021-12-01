@@ -15,5 +15,5 @@ spec:
                 - '/bin/sh'
               args:
                 - '-c'
-                - 'curl -s -o /dev/null -w "text=Read %{redirect_url}" https://en.wikipedia.org/wiki/Special:Random | curl -d @- -X POST http://dwk-project-app:1337/todos'
+                - 'curl -s -o /dev/null -w "text=Read %{redirect_url}" https://en.wikipedia.org/wiki/Special:Random | curl -d @- -X POST http://dwk-project-app:1337'
           restartPolicy: Never

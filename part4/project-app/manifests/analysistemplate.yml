@@ -5,7 +5,7 @@ metadata:
 spec:
   metrics:
   - name: success-rate
-    initialDelay: 1m
+    initialDelay: 10s
     interval: 60s
     count: 10
     successCondition: result[0] < 0.1

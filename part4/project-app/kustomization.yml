@@ -7,9 +7,10 @@ resources:
   - manifests/namespace.yml
   - manifests/cron.yml
   - manifests/db.yml
+  # - manifests/deployment.yml
   - manifests/analysistemplate.yml
   - manifests/rollout.yml
-  # - manifests/deployment.yml
+  - manifests/broadcaster.yml
   - manifests/ingress.yml
   - manifests/persistentvolume.yml
   - manifests/persistentvolumeclaim.yml
@@ -21,7 +22,10 @@ images:
     digest: sha256:83e9842a9f5c705c7156b776368fc2bf011cef7bc39ad3d0ea35f5a7229b7413
   - name: dwk-project-app-backend-image
     newName: smuliii/dwk-project-app-backend
-    digest: sha256:a2078be60a89594ddd7f0d8d6ccb7df3d1ad7d3ba40f4703b9fa1b823b7a9a68
+    digest: sha256:9355dabdc0882bb7d3873428d6edf3d7247b4a183158c1870b2f0eb5fb6ba30e
+  - name: dwk-project-app-broadcaster-image
+    newName: smuliii/dwk-project-app-broadcaster
+    digest: sha256:71a5f7229c8bf684d190e3f342d3b40d3425f14496142bdc9158ce5f5ffa990e
 configMapGenerator:
   - name: dwk-project-app-config
     envs:
