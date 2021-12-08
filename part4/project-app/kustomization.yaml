@@ -8,7 +8,7 @@ resources:
   - manifests/cron.yml
   - manifests/db.yml
   - manifests/deployment.yml
-  - manifests/analysistemplate.yml
+  # - manifests/analysistemplate.yml
   # - manifests/rollout.yml
   - manifests/broadcaster.yml
   - manifests/ingress.yml
