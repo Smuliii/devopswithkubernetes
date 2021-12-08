@@ -4,7 +4,7 @@ metadata:
   name: monitoring-nats
   namespace: prometheus
   labels:
-    release: kube-prometheus-stack-1632064059
+    release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
@@ -15,4 +15,4 @@ spec:
       port: metrics
   namespaceSelector:
     matchNames:
-      - dwk-project-app
+      - nats
