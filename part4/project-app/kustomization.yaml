@@ -1,15 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: dwk-project-app
-configurations:
-  - manifests/rollout-transform.yaml
+# configurations:
+  # - manifests/rollout-transform.yaml
 resources:
   - manifests/namespace.yml
   - manifests/cron.yml
   - manifests/db.yml
-  # - manifests/deployment.yml
+  - manifests/deployment.yml
   - manifests/analysistemplate.yml
-  - manifests/rollout.yml
+  # - manifests/rollout.yml
   - manifests/broadcaster.yml
   - manifests/ingress.yml
   - manifests/persistentvolume.yml
