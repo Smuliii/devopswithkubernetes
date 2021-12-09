@@ -42,13 +42,15 @@ jobs:
         working-directory: part4/project-app/broadcaster
         run: docker build . -t $BROADCASTER_APP_IMAGE_WITH_TAG && docker push $BROADCASTER_APP_IMAGE_WITH_TAG
 
-      - name: Setup Kustomize
+      - name: Setup Kustomize and update kustomize.yaml
         uses: imranismail/setup-kustomize@v1
-      - name: Update kustomize.yaml and commit changes
         run: |-
           kustomize edit set image dwk-project-app-frontend-image=$FRONTEND_APP_IMAGE_WITH_TAG
           kustomize edit set image dwk-project-app-backend-image=$BACKEND_APP_IMAGE_WITH_TAG
           kustomize edit set image dwk-project-app-broadcaster-image=$BROADCASTER_APP_IMAGE_WITH_TAG
-          git add .
-          git commit -m "Build new gitops project-app images ($GITHUB_SHA)"
-          git push
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          add: '.'
+          message: Build new gitops project-app images ($GITHUB_SHA)
