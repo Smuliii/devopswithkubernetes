@@ -26,34 +26,29 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - run: echo "FRONTEND_APP_IMAGE_WITH_TAG=$FRONTEND_APP_IMAGE:$GITHUB_SHA" >> $GITHUB_ENV
+      - run: echo "BACKEND_APP_IMAGE_WITH_TAG=$BACKEND_APP_IMAGE:$GITHUB_SHA" >> $GITHUB_ENV
+      - run: echo "BROADCASTER_APP_IMAGE_WITH_TAG=$BROADCASTER_APP_IMAGE:$GITHUB_SHA" >> $GITHUB_ENV
+
       - name: Build and push frontend app
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: part4/project-app/frontend
-          tags: '$FRONTEND_APP_IMAGE:$GITHUB_SHA'
+        working-directory: part4/project-app/frontend
+        run: docker build . -t $FRONTEND_APP_IMAGE_WITH_TAG && docker push $FRONTEND_APP_IMAGE_WITH_TAG
 
       - name: Build and push backend app
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: part4/project-app/backend
-          tags: '$BACKEND_APP_IMAGE:$GITHUB_SHA'
+        working-directory: part4/project-app/backend
+        run: docker build . -t $BACKEND_APP_IMAGE_WITH_TAG && docker push $BACKEND_APP_IMAGE_WITH_TAG
 
       - name: Build and push broadcaster app
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: part4/project-app/broadcaster
-          tags: '$BROADCASTER_APP_IMAGE:$GITHUB_SHA'
+        working-directory: part4/project-app/broadcaster
+        run: docker build . -t $BROADCASTER_APP_IMAGE_WITH_TAG && docker push $BROADCASTER_APP_IMAGE_WITH_TAG
 
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
       - name: Update kustomize.yaml and commit changes
         run: |-
-          kustomize edit set image dwk-project-app-frontend-image=$FRONTEND_APP_IMAGE:$GITHUB_SHA
-          kustomize edit set image dwk-project-app-backend-image=$BACKEND_APP_IMAGE:$GITHUB_SHA
-          kustomize edit set image dwk-project-app-broadcaster-image=$BROADCASTER_APP_IMAGE:$GITHUB_SHA
+          kustomize edit set image dwk-project-app-frontend-image=$FRONTEND_APP_IMAGE_WITH_TAG
+          kustomize edit set image dwk-project-app-backend-image=$BACKEND_APP_IMAGE_WITH_TAG
+          kustomize edit set image dwk-project-app-broadcaster-image=$BROADCASTER_APP_IMAGE_WITH_TAG
           git add .
           git commit -m "Build new gitops project-app images ($GITHUB_SHA)"
           git push
