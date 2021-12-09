@@ -1,0 +1,59 @@
+name: GitOps Flux Pipeline
+
+on:
+  push:
+    branches:
+    paths:
+      - 'part4/project-app/**'
+  workflow_dispatch:
+
+env:
+  FRONTEND_APP_IMAGE: smuliii/dwk-project-app-frontend
+  BACKEND_APP_IMAGE: smuliii/dwk-project-app-backend
+  BROADCASTER_APP_IMAGE: smuliii/dwk-project-app-broadcaster
+
+jobs:
+  gke_deployment:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: part4/project-app
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push frontend app
+        working-directory: part4/project-app/frontend
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: '$FRONTEND_APP_IMAGE:$GITHUB_SHA'
+
+      - name: Build and push backend app
+        working-directory: part4/project-app/backend
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: '$BACKEND_APP_IMAGE:$GITHUB_SHA'
+
+      - name: Build and push broadcaster app
+        working-directory: part4/project-app/broadcaster
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: '$BROADCASTER_APP_IMAGE:$GITHUB_SHA'
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v1
+      - name: Update kustomize.yaml and commit changes
+        run: |-
+          kustomize edit set image dwk-project-app-frontend-image=$FRONTEND_APP_IMAGE:$GITHUB_SHA
+          kustomize edit set image dwk-project-app-backend-image=$BACKEND_APP_IMAGE:$GITHUB_SHA
+          kustomize edit set image dwk-project-app-broadcaster-image=$BROADCASTER_APP_IMAGE:$GITHUB_SHA
+          git add .
+          git commit -m "Build new gitops project-app images ($GITHUB_SHA)"
+          git push
