@@ -3,34 +3,34 @@ kind: Kustomization
 namespace: dwk-project-app
 # configurations:
   # - manifests/rollout-transform.yaml
-resources:
-  - manifests/namespace.yml
-  - manifests/cron.yml
-  - manifests/db.yml
-  - manifests/deployment.yml
   # - manifests/analysistemplate.yml
   # - manifests/rollout.yml
-  - manifests/broadcaster.yml
-  - manifests/ingress.yml
-  - manifests/persistentvolume.yml
-  - manifests/persistentvolumeclaim.yml
-  - manifests/service.yml
+resources:
+- manifests/namespace.yml
+- manifests/cron.yml
+- manifests/db.yml
+- manifests/deployment.yml
+- manifests/broadcaster.yml
+- manifests/ingress.yml
+- manifests/persistentvolume.yml
+- manifests/persistentvolumeclaim.yml
+- manifests/service.yml
   # - manifests/horizontalpodautoscaler.yml
 images:
-  - name: dwk-project-app-frontend-image
-    newName: smuliii/dwk-project-app-frontend
-    digest: sha256:83e9842a9f5c705c7156b776368fc2bf011cef7bc39ad3d0ea35f5a7229b7413
-  - name: dwk-project-app-backend-image
-    newName: smuliii/dwk-project-app-backend
-    digest: sha256:9355dabdc0882bb7d3873428d6edf3d7247b4a183158c1870b2f0eb5fb6ba30e
-  - name: dwk-project-app-broadcaster-image
-    newName: smuliii/dwk-project-app-broadcaster
-    digest: sha256:71a5f7229c8bf684d190e3f342d3b40d3425f14496142bdc9158ce5f5ffa990e
+- name: dwk-project-app-backend-image
+  newName: smuliii/dwk-project-app-backend
+  newTag: f745dbe78e27283a71c4946bd929651b6ab27afe
+- name: dwk-project-app-broadcaster-image
+  newName: smuliii/dwk-project-app-broadcaster
+  newTag: f745dbe78e27283a71c4946bd929651b6ab27afe
+- name: dwk-project-app-frontend-image
+  newName: smuliii/dwk-project-app-frontend
+  newTag: f745dbe78e27283a71c4946bd929651b6ab27afe
 configMapGenerator:
-  - name: dwk-project-app-config
-    envs:
-      - config/configmap.env
+- envs:
+  - config/configmap.env
+  name: dwk-project-app-config
 secretGenerator:
-  - name: dwk-project-app-secrets
-    envs:
-      - config/secrets.env
+- envs:
+  - config/secrets.env
+  name: dwk-project-app-secrets
