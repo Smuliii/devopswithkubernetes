@@ -26,7 +26,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - run: echo "FRONTEND_APP_IMAGE_WITH_TAG=$FRONTEND_APP_IMAGE:$GITHUB_SHA" >> $GITHUB_ENV
+      - run: echo "FRONTEND_APP_IMAGE_WITH_TAG=$FRONTEND_APP_IMAGE:${GITHUB_SHA}" >> $GITHUB_ENV
       - run: echo "BACKEND_APP_IMAGE_WITH_TAG=$BACKEND_APP_IMAGE:$GITHUB_SHA" >> $GITHUB_ENV
       - run: echo "BROADCASTER_APP_IMAGE_WITH_TAG=$BROADCASTER_APP_IMAGE:$GITHUB_SHA" >> $GITHUB_ENV
 
@@ -54,4 +54,4 @@ jobs:
         uses: EndBug/add-and-commit@v7
         with:
           add: '.'
-          message: Build new gitops project-app images ($GITHUB_SHA)
+          message: Build new gitops project-app images (${GITHUB_SHA})
